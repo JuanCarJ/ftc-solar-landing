@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+/* ─── Design Tokens (FTC Solar logo palette) ───
+   Navy       → #1b2e4a  FTC lettering, dark sections
+   Sky blue   → #3b8bc9  Solar panels, arcs
+   Green      → #3a8f38  Leaves, CTA
+   Solar gold → #e8a838  Warm accent (sun)
+   Ice        → #f0f6fa  Light backgrounds
+   ──────────────────────────────────────────────── */
+@theme {
+  /* Dark navy (header, dark sections) */
+  --color-navy: #1b2e4a;
+  --color-navy-light: #264466;
+
+  /* Sky blue from solar panels (secondary accent) */
+  --color-blue: #3b8bc9;
+  --color-blue-light: #6db3e0;
+
+  /* Green from leaves (primary CTA) */
+  --color-green: #3a8f38;
+  --color-green-light: #4caf4a;
+  --color-green-lime: #8ab535;
+
+  /* Warm solar gold (warm accent) */
+  --color-solar: #e8a838;
+  --color-solar-light: #f0c060;
+
+  /* Light backgrounds */
+  --color-ice: #f0f6fa;
+  --color-ice-dark: #e1ecf4;
+
+  /* Deep navy (footer, text) */
+  --color-midnight: #152238;
+  --color-midnight-light: #3d5572;
+
+  /* Cyan accent */
+  --color-cyan: #4da6d9;
+  --color-cyan-light: #84c4e8;
+
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* ─── Base ─── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-midnight);
+  background-color: var(--color-ice);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ─── Focus ─── */
+:focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 2px;
+}
+
+/* ─── Scroll-triggered animations ─── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideLeft {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleReveal {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.animate-on-scroll {
+  opacity: 0;
+}
+
+.animate-on-scroll.is-visible {
+  animation: fadeSlideUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-on-scroll.slide-left.is-visible {
+  animation: fadeSlideLeft 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-on-scroll.scale-in.is-visible {
+  animation: scaleReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.delay-1 { animation-delay: 0.1s !important; }
+.delay-2 { animation-delay: 0.25s !important; }
+.delay-3 { animation-delay: 0.4s !important; }
+.delay-4 { animation-delay: 0.55s !important; }
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-on-scroll {
+    opacity: 1;
+  }
+}
+
+/* ─── Hero gradient overlay ─── */
+.hero-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(27, 46, 74, 0.88) 0%,
+    rgba(27, 46, 74, 0.5) 35%,
+    rgba(27, 46, 74, 0.18) 65%,
+    rgba(27, 46, 74, 0.03) 100%
+  );
+}
+
+/* ─── CTA hover glow ─── */
+.cta-primary {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cta-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.cta-primary:hover::after {
+  opacity: 1;
+}
+
+.cta-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(58, 143, 56, 0.35);
+}
+
+.cta-secondary {
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cta-secondary:hover {
+  background-color: rgba(240, 246, 250, 0.15);
+  transform: translateY(-1px);
+}
+
+/* ─── Decorative line (blue → solar gold) ─── */
+.accent-line {
+  width: 64px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-blue), var(--color-solar));
+  border-radius: 2px;
+}
+
+/* ─── Selection ─── */
+::selection {
+  background-color: var(--color-blue);
+  color: white;
+}
+
+/* ─── WhatsApp floating button pulse (3 cycles only) ─── */
+@keyframes whatsappPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+  70%  { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+.whatsapp-float {
+  animation: whatsappPulse 2.5s ease-out 3;
+}
+
+/* ─── Project carousel ─── */
+.carousel-track {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 1rem;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-card {
+  flex: 0 0 85%;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 768px) {
+  .carousel-card {
+    flex: 0 0 45%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .carousel-card {
+    flex: 0 0 32%;
+  }
+}
