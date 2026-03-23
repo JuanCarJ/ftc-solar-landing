@@ -599,7 +599,15 @@ function App() {
               </p>
             </div>
             <p className="text-xs">
-              Energía para un futuro sostenible.
+              Creado por{' '}
+              <a
+                href="https://dautia.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-solar/70 hover:text-solar transition-colors no-underline"
+              >
+                DautIA
+              </a>
             </p>
           </div>
         </div>
