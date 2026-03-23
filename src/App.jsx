@@ -345,6 +345,134 @@ function App() {
       </section>
 
       {/* ════════════════════════════════════════════
+          ¿SABÍAS QUE? — Beneficios tributarios Colombia
+      ════════════════════════════════════════════ */}
+      <section className="bg-navy relative overflow-hidden">
+        {/* Subtle radial glow */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(ellipse at 70% 30%, rgba(232,168,56,0.08) 0%, transparent 50%)',
+          }}
+        />
+
+        <div className="relative px-6 md:px-16 lg:px-24 py-20 md:py-28">
+          <div className="animate-on-scroll max-w-5xl mx-auto">
+            {/* Header */}
+            <div className="text-center mb-14 md:mb-20">
+              <span className="text-solar text-sm font-semibold uppercase tracking-[0.2em] mb-4 block">
+                ¿Sabías que?
+              </span>
+              <h2 className="font-display text-3xl md:text-5xl lg:text-6xl text-ice leading-tight mb-5">
+                Invertir en solar tiene
+                <br />
+                <span className="text-solar">respaldo de ley</span>
+              </h2>
+              <p className="text-ice/80 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
+                Colombia ofrece incentivos tributarios reales para quienes apuesten
+                por la energía solar. No es solo ahorro en tu factura — es política de Estado.
+              </p>
+            </div>
+
+            {/* Benefits grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+              {/* Benefit 1 — Deducción de renta */}
+              <div className="animate-on-scroll flex gap-5">
+                <div className="shrink-0 w-14 h-14 rounded-xl bg-solar/10 flex items-center justify-center">
+                  <span className="font-display text-2xl text-solar">50%</span>
+                </div>
+                <div>
+                  <h3 className="font-display text-xl text-ice mb-2">Deducción en renta</h3>
+                  <p className="text-ice/75 text-sm leading-relaxed">
+                    Deduce el <strong className="text-ice">50% de tu inversión</strong> del
+                    impuesto de renta, distribuido en hasta 15 años.
+                  </p>
+                  <p className="text-blue-light text-xs mt-2">
+                    Art. 11, Ley 1715 de 2014
+                  </p>
+                </div>
+              </div>
+
+              {/* Benefit 2 — Exclusión de IVA */}
+              <div className="animate-on-scroll delay-1 flex gap-5">
+                <div className="shrink-0 w-14 h-14 rounded-xl bg-solar/10 flex items-center justify-center">
+                  <span className="font-display text-2xl text-solar">0%</span>
+                </div>
+                <div>
+                  <h3 className="font-display text-xl text-ice mb-2">Exclusión total del IVA</h3>
+                  <p className="text-ice/75 text-sm leading-relaxed">
+                    Los paneles, inversores y equipos solares están <strong className="text-ice">exentos del 19% de IVA</strong>.
+                    Ahorro directo desde la compra.
+                  </p>
+                  <p className="text-blue-light text-xs mt-2">
+                    Art. 12, Ley 1715 / Ley 2099 de 2021
+                  </p>
+                </div>
+              </div>
+
+              {/* Benefit 3 — Depreciación acelerada */}
+              <div className="animate-on-scroll delay-2 flex gap-5">
+                <div className="shrink-0 w-14 h-14 rounded-xl bg-solar/10 flex items-center justify-center">
+                  <svg className="w-7 h-7 text-solar" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-display text-xl text-ice mb-2">Depreciación acelerada</h3>
+                  <p className="text-ice/75 text-sm leading-relaxed">
+                    Deprecia tus activos solares <strong className="text-ice">hasta un 33.33% anual</strong>,
+                    reduciendo tu base gravable significativamente.
+                  </p>
+                  <p className="text-blue-light text-xs mt-2">
+                    Art. 14, Ley 1715 de 2014
+                  </p>
+                </div>
+              </div>
+
+              {/* Benefit 4 — Ahorro en factura */}
+              <div className="animate-on-scroll delay-3 flex gap-5">
+                <div className="shrink-0 w-14 h-14 rounded-xl bg-solar/10 flex items-center justify-center">
+                  <svg className="w-7 h-7 text-solar" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-display text-xl text-ice mb-2">Hasta 60% menos en tu factura</h3>
+                  <p className="text-ice/75 text-sm leading-relaxed">
+                    Según el Ministerio de Minas y Energía, un sistema fotovoltaico
+                    puede <strong className="text-ice">reducir tu factura de luz hasta en un 60%</strong>.
+                  </p>
+                  <p className="text-blue-light text-xs mt-2">
+                    MinEnergía — Programa Colombia Solar
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Vigencia note */}
+            <div className="animate-on-scroll mt-14 text-center">
+              <p className="text-ice/50 text-sm max-w-xl mx-auto">
+                Estos beneficios están vigentes por <strong className="text-ice/70">30 años</strong> a
+                partir de julio de 2021 (Ley 2099). Requieren certificación UPME.
+                Nosotros te acompañamos en todo el trámite.
+              </p>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cta-primary inline-flex items-center justify-center bg-solar text-navy font-semibold text-base px-8 py-4 rounded-full tracking-wide no-underline mt-8"
+              >
+                Calcula tu ahorro gratis
+                <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════
           SERVICES — One job per block
       ════════════════════════════════════════════ */}
       <section id="servicios" className="bg-navy text-ice">
