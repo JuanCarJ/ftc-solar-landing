@@ -1,53 +1,19 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useScrollReveal } from './hooks/useScrollReveal'
 
 const WHATSAPP_NUMBER = '573023754780'
 const WHATSAPP_MESSAGE = encodeURIComponent('Hola, me interesa información sobre paneles solares.')
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`
 
-const PROJECTS = [
-  {
-    image: '/foto1.jpg',
-    title: 'Proyecto 1',
-    location: 'Marinilla, Antioquia',
-    capacity: '8.5 kWp',
-    type: 'Residencial',
-  },
-  {
-    image: '/foto2.jpg',
-    title: 'Proyecto 2',
-    location: 'Marinilla, Antioquia',
-    capacity: '45 kWp',
-    type: 'Comercial',
-  },
-  {
-    image: '/foto3.jpg',
-    title: 'Proyecto 3',
-    location: 'Marinilla, Antioquia',
-    capacity: '22 kWp',
-    type: 'Residencial',
-  },
-  {
-    image: '/foto4.jpg',
-    title: 'Proyecto 4',
-    location: 'Marinilla, Antioquia',
-    capacity: '120 kWp',
-    type: 'Comercial',
-  },
-  {
-    image: '/foto5.jpg',
-    title: 'Proyecto 5',
-    location: 'Marinilla, Antioquia',
-    capacity: '35 kWp',
-    type: 'Residencial',
-  },
-]
+const PROJECT_IMAGES = Array.from({ length: 25 }, (_, i) => `/proyectos/${i + 1}.jpg`)
+const ROW_1_IMAGES = PROJECT_IMAGES.slice(0, 13)
+const ROW_2_IMAGES = PROJECT_IMAGES.slice(13)
 
 function App() {
   const pageRef = useScrollReveal(0.12)
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const carouselRef = useRef(null)
+  const [lightboxImg, setLightboxImg] = useState(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80)
@@ -55,12 +21,26 @@ function App() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const scrollCarousel = useCallback((direction) => {
-    const track = carouselRef.current
-    if (!track) return
-    const cardWidth = track.querySelector('.carousel-card')?.offsetWidth || 300
-    track.scrollBy({ left: direction * (cardWidth + 24), behavior: 'smooth' })
-  }, [])
+  useEffect(() => {
+    if (!lightboxImg) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') setLightboxImg(null)
+      if (e.key === 'ArrowRight') {
+        const idx = PROJECT_IMAGES.indexOf(lightboxImg)
+        setLightboxImg(PROJECT_IMAGES[(idx + 1) % PROJECT_IMAGES.length])
+      }
+      if (e.key === 'ArrowLeft') {
+        const idx = PROJECT_IMAGES.indexOf(lightboxImg)
+        setLightboxImg(PROJECT_IMAGES[(idx - 1 + PROJECT_IMAGES.length) % PROJECT_IMAGES.length])
+      }
+    }
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [lightboxImg])
 
   const closeMenu = () => setMenuOpen(false)
 
@@ -208,8 +188,8 @@ function App() {
       <section className="relative min-h-screen flex items-end">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=2400&q=85"
-            alt="Instalación de paneles solares bajo la luz dorada del atardecer"
+            src="/proyectos/hero.jpeg"
+            alt="Instalación de paneles solares FTC Solar"
             className="w-full h-full object-cover"
             fetchPriority="high"
           />
@@ -219,13 +199,13 @@ function App() {
         <div className="relative z-10 w-full px-6 md:px-16 lg:px-24 pb-16 md:pb-24 pt-40">
           {/* Location trust marker */}
           <p className="text-ice/70 text-sm uppercase tracking-[0.2em] mb-6 font-medium">
-            Marinilla, Antioquia &mdash; Energía solar de confianza
+            Marinilla, Antioquia
           </p>
 
           <h1 className="font-display text-5xl md:text-7xl lg:text-8xl text-ice leading-[1.05] max-w-4xl mb-6">
-            Energía limpia
+            Energía para un
             <br />
-            <span className="text-solar">para el futuro</span>
+            <span className="text-solar">futuro sostenible</span>
           </h1>
 
           <p className="text-lg md:text-xl text-ice/85 max-w-xl mb-10 font-light leading-relaxed">
@@ -241,7 +221,7 @@ function App() {
               rel="noopener noreferrer"
               className="cta-primary inline-flex items-center justify-center bg-green text-white font-semibold text-base px-8 py-4 rounded-full tracking-wide no-underline"
             >
-              Solicita tu presupuesto
+              Cotiza tu proyecto
               <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -262,83 +242,85 @@ function App() {
       <section id="proyectos" className="relative bg-ice">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue/40 to-transparent" />
 
-        <div className="px-6 md:px-16 lg:px-24 pt-24 md:pt-32 pb-20 md:pb-28">
-          <div className="animate-on-scroll flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
-            <div>
-              <div className="accent-line mb-6" />
-              <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-navy leading-tight max-w-3xl mb-4">
-                Proyectos que transforman paisajes
-              </h2>
-              <p className="text-midnight-light text-lg md:text-xl max-w-2xl font-light leading-relaxed">
-                Cada instalación es una pieza de ingeniería diseñada para integrarse
-                con la arquitectura y el entorno natural del Oriente Antioqueño.
-              </p>
-            </div>
+        <div className="pt-24 md:pt-32 pb-6 md:pb-8">
+          <div className="animate-on-scroll px-6 md:px-16 lg:px-24 mb-12 text-center">
+            <div className="accent-line mb-6 mx-auto" />
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-navy leading-tight mb-4">
+              Nuestro trabajo habla por sí solo
+            </h2>
+          </div>
 
-            {/* Carousel controls */}
-            <div className="flex gap-3 shrink-0">
-              <button
-                onClick={() => scrollCarousel(-1)}
-                aria-label="Proyecto anterior"
-                className="w-12 h-12 rounded-full border border-navy/20 flex items-center justify-center text-navy hover:bg-navy hover:text-ice transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <button
-                onClick={() => scrollCarousel(1)}
-                aria-label="Proyecto siguiente"
-                className="w-12 h-12 rounded-full border border-navy/20 flex items-center justify-center text-navy hover:bg-navy hover:text-ice transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
+          {/* Marquee row 1 — left to right */}
+          <div className="animate-on-scroll scale-in marquee-container mb-3 md:mb-4">
+            <div className="marquee-track marquee-ltr">
+              {[...ROW_1_IMAGES, ...ROW_1_IMAGES].map((src, i) => (
+                <div
+                  key={i}
+                  className="marquee-card group cursor-pointer"
+                  onClick={() => setLightboxImg(src)}
+                >
+                  <div className="relative rounded-xl overflow-hidden shadow-lg shadow-navy/10">
+                    <img
+                      src={src}
+                      alt={`Proyecto ${(i % ROW_1_IMAGES.length) + 1}`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-navy/0 group-hover:bg-navy/25 transition-colors duration-300 flex items-center justify-center">
+                      <svg
+                        className="w-9 h-9 text-ice opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-lg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Carousel */}
-          <div className="animate-on-scroll scale-in">
-            <div ref={carouselRef} className="carousel-track">
-              {PROJECTS.map((project, i) => (
-                <article key={i} className="carousel-card group">
-                  <div className="relative rounded-2xl overflow-hidden">
+          {/* Marquee row 2 — right to left */}
+          <div className="animate-on-scroll scale-in delay-2 marquee-container">
+            <div className="marquee-track marquee-rtl">
+              {[...ROW_2_IMAGES, ...ROW_2_IMAGES].map((src, i) => (
+                <div
+                  key={i}
+                  className="marquee-card group cursor-pointer"
+                  onClick={() => setLightboxImg(src)}
+                >
+                  <div className="relative rounded-xl overflow-hidden shadow-lg shadow-navy/10">
                     <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700"
+                      src={src}
+                      alt={`Proyecto ${(i % ROW_2_IMAGES.length) + 14}`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       loading="lazy"
                     />
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-navy/80 to-transparent p-6 pt-16">
-                      <span className="inline-block text-xs font-semibold uppercase tracking-wider text-solar bg-navy/60 px-3 py-1 rounded-full mb-3">
-                        {project.type}
-                      </span>
-                      <h3 className="font-display text-2xl text-ice mb-1">{project.title}</h3>
-                      <div className="flex items-center gap-4 text-ice/80 text-sm">
-                        <span>{project.location}</span>
-                        <span className="text-solar font-semibold">{project.capacity}</span>
-                      </div>
+                    <div className="absolute inset-0 bg-navy/0 group-hover:bg-navy/25 transition-colors duration-300 flex items-center justify-center">
+                      <svg
+                        className="w-9 h-9 text-ice opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-lg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
+                      </svg>
                     </div>
                   </div>
-                </article>
+                </div>
               ))}
             </div>
           </div>
 
           {/* Stats bar */}
-          <div className="animate-on-scroll mt-12 flex flex-wrap gap-8 md:gap-16 justify-center md:justify-start">
-            <div>
-              <span className="font-display text-3xl md:text-5xl text-navy">+500</span>
-              <p className="text-midnight-light text-sm mt-1">Instalaciones completadas</p>
-            </div>
-            <div>
-              <span className="font-display text-3xl md:text-5xl text-solar">12MW</span>
-              <p className="text-midnight-light text-sm mt-1">Capacidad instalada</p>
-            </div>
-            <div>
-              <span className="font-display text-3xl md:text-5xl text-navy">98%</span>
-              <p className="text-midnight-light text-sm mt-1">Satisfacción del cliente</p>
+          <div className="animate-on-scroll mt-6 md:mt-8 px-6 md:px-16 lg:px-24 flex justify-center">
+            <div className="text-center">
+              <span className="font-display text-5xl md:text-7xl lg:text-8xl text-solar drop-shadow-[0_2px_12px_rgba(232,168,56,0.4)]">+100</span>
+              <p className="text-navy text-lg md:text-2xl lg:text-3xl font-display mt-2 tracking-wide">Instalaciones realizadas por todo Colombia</p>
             </div>
           </div>
         </div>
@@ -364,13 +346,13 @@ function App() {
                 ¿Sabías que?
               </span>
               <h2 className="font-display text-3xl md:text-5xl lg:text-6xl text-ice leading-tight mb-5">
-                Invertir en solar tiene
+                Invertir en energía solar tiene
                 <br />
-                <span className="text-solar">respaldo de ley</span>
+                <span className="text-solar">beneficios tributarios</span>
               </h2>
               <p className="text-ice/80 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
                 Colombia ofrece incentivos tributarios reales para quienes apuesten
-                por la energía solar. No es solo ahorro en tu factura — es política de Estado.
+                por la energía solar. Es mucho más que ahorro en tu factura!
               </p>
             </div>
 
@@ -656,14 +638,32 @@ function App() {
                 </svg>
               </a>
               <a
-                href="tel:+573023754780"
-                className="cta-secondary inline-flex items-center justify-center border border-ice/30 text-ice font-medium text-base px-8 py-4 rounded-full tracking-wide no-underline"
+                href="https://maps.app.goo.gl/Hb7AKLHGDnwMcvcJ6"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cta-secondary inline-flex flex-col items-center justify-center border border-ice/30 text-ice font-medium text-base px-8 py-4 rounded-full tracking-wide no-underline"
               >
-                <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-                </svg>
-                302 375 4780
+                <span className="flex items-center">
+                  <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                  </svg>
+                  Visítanos
+                </span>
+                <span className="text-xs text-ice/60 mt-1">Cra. 30 #26-140 local 202, Marinilla</span>
               </a>
+            </div>
+
+            <div className="mt-8 rounded-2xl overflow-hidden shadow-lg shadow-black/20">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5980.338878224964!2d-75.33873392268744!3d6.169161279199944!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e46a10f0034f66d%3A0xfe09e2353b0c51e0!2sFTCSolar!5e0!3m2!1ses-419!2sco!4v1774541963535!5m2!1ses-419!2sco"
+                className="w-full h-64 md:h-80 lg:h-96"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Ubicación FTC Solar"
+              />
             </div>
           </div>
         </div>
@@ -755,6 +755,65 @@ function App() {
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
         </svg>
       </a>
+
+      {/* ════════════════════════════════════════════
+          LIGHTBOX — Full-screen image viewer
+      ════════════════════════════════════════════ */}
+      {lightboxImg && (
+        <div
+          className="lightbox-backdrop fixed inset-0 z-[100] flex items-center justify-center bg-midnight/90 backdrop-blur-sm cursor-pointer"
+          onClick={() => setLightboxImg(null)}
+        >
+          <button
+            onClick={() => setLightboxImg(null)}
+            aria-label="Cerrar"
+            className="absolute top-3 right-3 md:top-6 md:right-6 w-10 h-10 md:w-12 md:h-12 rounded-full bg-ice/10 hover:bg-ice/20 flex items-center justify-center text-ice transition-colors z-10"
+          >
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              const idx = PROJECT_IMAGES.indexOf(lightboxImg)
+              setLightboxImg(PROJECT_IMAGES[(idx - 1 + PROJECT_IMAGES.length) % PROJECT_IMAGES.length])
+            }}
+            aria-label="Imagen anterior"
+            className="absolute left-2 md:left-8 w-10 h-10 md:w-12 md:h-12 rounded-full bg-ice/10 hover:bg-ice/20 flex items-center justify-center text-ice transition-colors"
+          >
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <img
+            src={lightboxImg}
+            alt="Proyecto FTC Solar"
+            className="lightbox-image max-h-[80vh] max-w-[92vw] md:max-h-[85vh] md:max-w-[85vw] object-contain rounded-lg md:rounded-xl shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              const idx = PROJECT_IMAGES.indexOf(lightboxImg)
+              setLightboxImg(PROJECT_IMAGES[(idx + 1) % PROJECT_IMAGES.length])
+            }}
+            aria-label="Imagen siguiente"
+            className="absolute right-2 md:right-8 w-10 h-10 md:w-12 md:h-12 rounded-full bg-ice/10 hover:bg-ice/20 flex items-center justify-center text-ice transition-colors"
+          >
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          <div className="absolute bottom-4 md:bottom-6 text-ice/60 text-xs md:text-sm font-medium">
+            {PROJECT_IMAGES.indexOf(lightboxImg) + 1} / {PROJECT_IMAGES.length}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
