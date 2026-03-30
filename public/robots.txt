@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://solarftc.com/sitemap.xml
